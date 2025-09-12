@@ -68,11 +68,11 @@ def extract_all_frames(videos_folder, out_root, count):
         n, saved_list = save_frames(os.path.join(videos_folder, v), out_root, count)
         for f in saved_list:
             records.append({"video": v, "frame_path": f})
-        print(f"{v}: saved {n} frames")
+        # print(f"{v}: saved {n} frames")
     return pd.DataFrame(records)
 
 if __name__ == "__main__":
     df = extract_all_frames(videos_dir, frames_root, frames_per_video)
     df.to_csv(metadata_file, index=False)
-    print(f"{len(df)} frames")
-    print(f"Metadata : {metadata_file}")
+    # print(f"{len(df)} frames")
+    # print(f" : {metadata_file}")
