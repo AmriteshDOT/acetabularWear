@@ -2,7 +2,7 @@ import os
 import optuna
 import random
 import tensorflow as tf
-import data_utils
+import data
 from tensorflow.keras import layers, Model, Input
 from tensorflow.keras.applications import DenseNet121
 from tensorflow.keras.applications.densenet import (
@@ -14,17 +14,15 @@ img_size = (224, 224)
 batch_size = 32
 seed = 42
 
-trials = 24  
-head_run_epochs = 6  
-head_final_epochs = 12 
-finetune_epochs = 12  
+trials = 24
+head_run_epochs = 6
+head_final_epochs = 12
+finetune_epochs = 12
 checkpoint_file = "densenet_best.h5"
 final_model_file = "densenet_final.h5"
-unfreeze_last_n = 30 
+unfreeze_last_n = 30
 # --------------------------------------------
-train_ds, val_ds, classes = data_utils.get_datasets(
-    data_utils.src_folder, data_utils.patient_classes
-)
+train_ds, val_ds, _, classes = data.get_datasets(data.src_folder, data.patient_classes)
 
 
 def build_model(num_classes, dropout_rate, head_units, backbone_trainable=False):
