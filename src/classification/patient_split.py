@@ -24,11 +24,11 @@ def patient_wise_split(source_dir, output_dir, train_ratio=0.8, seed=42):
             src = os.path.join(source_dir, patient)
             dst = os.path.join(target_dir, patient)
             if os.path.exists(dst):
-                shutil.rmtree(dst)  # overwrite if exists
+                shutil.rmtree(dst)  # overwrite
             shutil.copytree(src, dst)
 
     copy_patients(train_patients, train_dir)
     copy_patients(val_patients, val_dir)
 
-    print(f"Train patients: {len(train_patients)}, Val patients: {len(val_patients)}")
+    # print(f"Train: {len(train_patients)}, Val: {len(val_patients)}")
     return train_dir, val_dir
