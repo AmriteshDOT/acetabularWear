@@ -10,7 +10,6 @@ from tensorflow.keras.applications.densenet import (
 )
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
 
-# -------- simple human-like config ----------
 img_size = (224, 224)
 batch_size = 32
 seed = 42
@@ -55,7 +54,7 @@ def build_model(num_classes, dropout_rate, head_units, backbone_trainable=False)
     return model, backbone
 
 
-### trained head till now ###
+### head till now ###
 def compile_and_train(
     model, train_ds, val_ds, lr, epochs, ckpt_path, patience=3, verbose=1
 ):
@@ -83,7 +82,6 @@ def compile_and_train(
 
 
 def objective(trial, train_ds, val_ds, num_classes):
-    # sample hyperparams
     dropout = trial.suggest_float("dropout", 0.2, 0.6)
     head_units = trial.suggest_categorical("head_units", [64, 128, 256])
     lr = trial.suggest_loguniform("lr", 1e-5, 1e-3)
@@ -188,7 +186,7 @@ def train_with_optuna():
         )
         final_model.load_weights(checkpoint_file)
         final_model.save(final_model_file)
-        # print("Saved final model to", final_model_file)
+        # print(final_model_file)
         return final_model_file
 
     model.save(final_model_file)
@@ -197,4 +195,4 @@ def train_with_optuna():
 
 if __name__ == "__main__":
     out = train_with_optuna()
-    # print("done ->", out)
+    # print("->", out)
