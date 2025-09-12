@@ -137,7 +137,7 @@ def run_optuna_search(
 
 
 def unfreeze_backbone(backbone, last_n):
-    # set last_n layers trainable, keep earlier frozen
+    # slast_n trainable
     total = len(backbone.layers)
     start = max(0, total - abs(last_n))
     for i, layer in enumerate(backbone.layers):
