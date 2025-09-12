@@ -40,7 +40,7 @@ def crop_frames(model, source, out_root):
                     out_name = f"{img_path.stem}_crop{i}.jpg"
                     cv2.imwrite(str(patient_out / out_name), crop)
 
-        print(f"{patient.name}: crops saved -> {patient_out}")
+        # print(f"{patient.name}: crops saved -> {patient_out}")
 
 if __name__ == "__main__":
     model = load_model(weights_path)
