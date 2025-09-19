@@ -6,7 +6,6 @@ import random
 def patient_wise_split_3way(
     source_dir, output_dir, train_ratio=0.7, val_ratio=0.15, seed=42
 ):
-
     train_dir = os.path.join(output_dir, "train")
     val_dir = os.path.join(output_dir, "val")
     test_dir = os.path.join(output_dir, "test")
@@ -33,7 +32,7 @@ def patient_wise_split_3way(
             src = os.path.join(source_dir, patient)
             dst = os.path.join(target_root, patient)
             if os.path.exists(dst):
-                shutil.rmtree(dst)  # overwrite , clean
+                shutil.rmtree(dst)  # overwrite, clean
             shutil.copytree(src, dst)
 
     copy_patients(train_patients, train_dir)
@@ -41,3 +40,18 @@ def patient_wise_split_3way(
     copy_patients(test_patients, test_dir)
 
     return train_dir, val_dir, test_dir
+
+
+def main():
+    src = "patients"
+    out = "dataset_split"
+    train_r = 0.7
+    val_r = 0.15
+    seed = 42
+
+    t, v, te = patient_wise_split_3way(
+        src, out, train_ratio=train_r, val_ratio=val_r, seed=seed
+    )
+
+if __name__ == "__main__":
+    main()

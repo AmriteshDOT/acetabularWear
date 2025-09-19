@@ -7,11 +7,8 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 from sklearn.metrics import classification_report, confusion_matrix
 
-img_size = (224, 224)
-batch_size = 32
 
-
-def load_test_ds(test_dir, img_size=img_size, batch_size=batch_size):
+def load_test_ds(test_dir, img_size=(224, 224), batch_size=32):
     test_dir = str(Path(test_dir))
     ds = tf.keras.utils.image_dataset_from_directory(
         test_dir,
@@ -23,20 +20,22 @@ def load_test_ds(test_dir, img_size=img_size, batch_size=batch_size):
     return ds
 
 
-def simple_eval(model_path, test_dir, out_dir="eval_out"):
+def simple_eval(
+    model_path, test_dir, out_dir="eval_out", img_size=(224, 224), batch_size=32
+):
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
 
     model = tf.keras.models.load_model(model_path)
 
-    test_ds = load_test_ds(test_dir)
+    test_ds = load_test_ds(test_dir, img_size=img_size, batch_size=batch_size)
 
+    # loss/accuracy
     loss, acc = model.evaluate(test_ds, verbose=1)
     summary = {"loss": float(loss), "accuracy": float(acc)}
 
-    y_true = []
-    y_pred = []
-
+    # predictions
+    y_true, y_pred = [], []
     for x, y in test_ds:
         probs = model.predict(x, verbose=0)
         y_true.extend(y.numpy().tolist())
@@ -47,6 +46,7 @@ def simple_eval(model_path, test_dir, out_dir="eval_out"):
 
     classes = test_ds.class_names
 
+    # classification report
     rep_dict = classification_report(
         y_true, y_pred, target_names=classes, output_dict=True
     )
@@ -54,6 +54,7 @@ def simple_eval(model_path, test_dir, out_dir="eval_out"):
     report_csv = out / "classification_report.csv"
     df.to_csv(report_csv, index=True)
 
+    # confusion matrix
     cm = confusion_matrix(y_true, y_pred)
     fig, ax = plt.subplots(figsize=(6, 6))
     im = ax.imshow(cm, interpolation="nearest", cmap="Blues")
@@ -79,6 +80,7 @@ def simple_eval(model_path, test_dir, out_dir="eval_out"):
     fig.savefig(cm_png, dpi=150)
     plt.close(fig)
 
+    # outputs
     summary["confusion_matrix"] = str(cm_png)
     summary["report_csv"] = str(report_csv)
 
@@ -87,3 +89,22 @@ def simple_eval(model_path, test_dir, out_dir="eval_out"):
         json.dump(summary, f, indent=2)
 
     return summary
+
+
+def main():
+    # config values (modify as needed)
+    model_path = "saved_model"  # path to trained model
+    test_dir = "dataset_split/test"  # test dataset folder
+    out_dir = "eval_out"
+    img_size = (224, 224)
+    batch_size = 32
+
+    result = simple_eval(
+        model_path, test_dir, out_dir, img_size=img_size, batch_size=batch_size
+    )
+    print("Evaluation summary saved at:", out_dir)
+    print(json.dumps(result, indent=2))
+
+
+if __name__ == "__main__":
+    main()
