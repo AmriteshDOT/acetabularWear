@@ -3,6 +3,7 @@ import os
 import optuna
 import random
 import tensorflow as tf
+import joblib
 import data
 from tensorflow.keras import layers, Model, Input
 from tensorflow.keras.applications import DenseNet121
@@ -62,6 +63,7 @@ def compile_and_train(
     history = model.fit(
         train_ds, validation_data=val_ds, epochs=epochs, callbacks=cbs, verbose=verbose
     )
+    joblib.dump(history.history, "history.joblib")
     return history
 
 
@@ -199,7 +201,7 @@ def main():
     tmp_ckpt = "/tmp/optuna_ckpt.h5"
     db_path = "sqlite:///optuna_study.db"
     csv_path = "optuna_trials.csv"
-    
+
     # cfg
     cfg = {
         "img_size": img_size,
