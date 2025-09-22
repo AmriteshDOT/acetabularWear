@@ -92,9 +92,8 @@ def simple_eval(
 
 
 def main():
-    # config values (modify as needed)
-    model_path = "saved_model"  # path to trained model
-    test_dir = "dataset_split/test"  # test dataset folder
+    model_path = "saved_model"  # trained
+    test_dir = "dataset_split/test"  # test dataset
     out_dir = "eval_out"
     img_size = (224, 224)
     batch_size = 32
@@ -102,7 +101,7 @@ def main():
     result = simple_eval(
         model_path, test_dir, out_dir, img_size=img_size, batch_size=batch_size
     )
-    print("Evaluation summary saved at:", out_dir)
+    # print("Evaluation summary saved at:", out_dir)
     print(json.dumps(result, indent=2))
 
 
